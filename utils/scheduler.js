@@ -11,6 +11,8 @@ const { default: PQueue } = require('p-queue');
 String.prototype.replaceWithMask = function (start, end) {
     return this.substr(0, start) + '******' + this.substr(-end, end)
 }
+//并发任务数
+const concurrencyCount = os.cpus().length * 2
 
 const randomDate = (options) => {
     let startDate = moment();
@@ -226,8 +228,8 @@ let scheduler = {
             }
 
             // 任务执行
-            let queue = new PQueue({ concurrency: 2 });
-            console.log('调度任务中', '并发数', 2)
+            let queue = new PQueue({ concurrency: concurrencyCount });
+            console.log('调度任务中', '并发数', concurrencyCount)
             for (let task of will_tasks) {
                 queue.add(async () => {
                     try {

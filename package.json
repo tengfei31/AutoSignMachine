@@ -24,5 +24,8 @@
   },
   "devDependencies": {
     "serverless-tencent-scf": "^0.1.7"
+  },
+  "scripts": {
+    "unicom": "node --inspect index.js unicom --config unicom.json ----tryrun"
   }
 }

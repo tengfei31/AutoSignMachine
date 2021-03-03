@@ -1,4 +1,5 @@
 // 娱乐中心
+const os = require('os')
 const CryptoJS = require("crypto-js");
 var crypto = require('crypto');
 const { default: PQueue } = require('p-queue');
@@ -31,6 +32,8 @@ var deviceInfos = [
     'm=Pixel&o=8&a=27&p=1080*1920&f=google&mm=5725&cf=1800&cc=8&qqversion=null'
 ]
 var deviceInfo = deviceInfos[Math.floor(Math.random() * deviceInfos.length)]
+//并发任务数
+const concurrencyCount = os.cpus().length * 2
 
 var producGame = {
     // 娱乐中心每日签到-打卡
@@ -372,9 +375,9 @@ var producGame = {
         let games = await producGame.timeTaskQuery(axios, options)
         games = allgames.filter(g => games.filter(g => g.state === '0').map(i => i.gameId).indexOf(g.id) !== -1)
         console.log('剩余未完成game', games.length)
-        let queue = new PQueue({ concurrency: 2 });
+        let queue = new PQueue({ concurrency: concurrencyCount });
 
-        console.log('调度任务中', '并发数', 2)
+        console.log('调度任务中', '并发数', concurrencyCount)
         for (let game of games) {
             queue.add(async () => {
                 console.log(game.name)
@@ -414,9 +417,9 @@ var producGame = {
         let { games, jar } = await producGame.getTaskList(axios, options)
         games = games.filter(d => d.task === '5' && d.reachState === '0' && d.task_type === 'duration')
         console.log('剩余未完成game', games.length)
-        let queue = new PQueue({ concurrency: 2 });
+        let queue = new PQueue({ concurrency: concurrencyCount });
 
-        console.log('调度任务中', '并发数', 2)
+        console.log('调度任务中', '并发数', concurrencyCount)
         for (let game of games) {
             queue.add(async () => {
                 console.log(game.name)
